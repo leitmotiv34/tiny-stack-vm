@@ -13,7 +13,7 @@ function run(prog: Uint8Array, input: Uint8Array): { bytes: Uint8Array; code: nu
   let pc = 0, steps = 0, inp = 0, len = 0;
   const need = (n: number): void => { if (st.length < n) throw 2; };
   const push = (v: number): void => { if (st.length >= 256) throw 3; st.push(v | 0); };
-  // n-byte little-endian immediate at pc+1, signed if sgn.
+  // immediate at pc+1
   const imm = (n: number, sgn: boolean): number => {
     if (pc + n >= prog.length) throw 9;
     let v = 0;
@@ -132,7 +132,7 @@ for (const id of readdirSync(inputDir).sort()) {
   let input = new Uint8Array(0);
   try {
     input = new Uint8Array(readFileSync(join(inputDir, id, 'input.bin')));
-  } catch { /* no input file */ }
+  } catch {}
   const { bytes, code } = run(prog, input);
   mkdirSync(join(outputDir, id), { recursive: true });
   writeFileSync(join(outputDir, id, 'stdout.bin'), bytes);
